@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     Animator animator;
     Rigidbody2D player;
     private string currentState;
-    private float xAxis;
+    HelperScript helper;
 
     // Animation States
     const string IDLE = "idle";
@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         player = GetComponent<Rigidbody2D>();
+        helper = GetComponent<HelperScript>();
     }
     private void Update()
     {
@@ -27,12 +28,15 @@ public class Player : MonoBehaviour
         {
             player.velocity = new Vector2(5, 0);
             ChangeAnimationState(RUN);
+            helper.FlipObject(false);
+
         }
         // flips the player left, and moves the player left
         if (Input.GetKey("left"))
         {
             player.velocity = new Vector2(-5, 0);
             ChangeAnimationState(RUN);
+            helper.FlipObject(true);
         }
         if (player.velocity == new Vector2(0, 0))
         {
@@ -42,11 +46,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ChangeAnimationState(JUMP);
-            player.velocity = new Vector3(player.velocity.x, 10, 0);
+            player.velocity = new Vector3(player.velocity.x, 4, 0);
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            animator.Play("Roll");
+            ChangeAnimationState(SLIDE);
         }
     }
     void ChangeAnimationState(string newState)
